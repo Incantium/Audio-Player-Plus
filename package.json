@@ -4,6 +4,14 @@
   "displayName": "Audio",
   "description": "An extendable audio mixer with better control over volume and looping.",
   "unity": "2022.3",
+  "documentationUrl": "https://github.com/Incantium/Incantium-Core",
+  "licensesUrl": "https://github.com/Incantium/Incantium-Core/blob/main/LICENSE",
+  "keywords": [
+    "Package",
+    "C#",
+    "Unity",
+    "Audio"
+  ],
   "author": {
     "name": "Incantium",
     "url": "https://github.com/Incantium"
