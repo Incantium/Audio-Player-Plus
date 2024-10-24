@@ -7,9 +7,9 @@ namespace Incantium.Audio
         [RuntimeInitializeOnLoadMethod]
         private static void OnStartup()
         {
-            var settings = Resources.Load<AudioPlayerSettings>("AudioPlayerSettings");
+            var settings = AudioPlayerSettings.GetOrCreateSettings();
             
-            if (!settings.instantiateAtStartup) return;
+            if (!settings || !settings.instantiateAtStartup) return;
 
             var audio = new GameObject("Audio");
             Object.DontDestroyOnLoad(audio);

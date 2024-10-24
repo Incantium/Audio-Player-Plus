@@ -1,12 +1,11 @@
 ﻿using UnityEditor;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Incantium.Audio.Editor
 {
     public class AudioPlayerSettingsProvider : SettingsProvider
     {
-        private const string SETTINGS_PATH = "Project/Audio/Audio Player Plus";
+        private const string PROJECT_PATH = "Project/Audio/Audio Player Plus";
         private const SettingsScope SCOPE = SettingsScope.Project;
 
         private SerializedObject settings;
@@ -14,11 +13,12 @@ namespace Incantium.Audio.Editor
         [SettingsProvider]
         private static SettingsProvider CreateProvider() => new AudioPlayerSettingsProvider();
         
-        public AudioPlayerSettingsProvider() : base(SETTINGS_PATH, SCOPE) {}
+        public AudioPlayerSettingsProvider() : base(PROJECT_PATH, SCOPE) {}
 
         public override void OnActivate(string searchContext, VisualElement rootElement)
         {
-            var scriptableObject = Resources.Load<AudioPlayerSettings>("AudioPlayerSettings");
+            var scriptableObject = AudioPlayerSettings.GetOrCreateSettings();
+            
             settings = new SerializedObject(scriptableObject);
         }
 
