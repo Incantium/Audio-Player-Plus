@@ -6,31 +6,46 @@ namespace Incantium.Audio.Editor
     [CustomEditor(typeof(MusicClip))]
     public class MusicClipDrawer : UnityEditor.Editor
     {
+        private MusicClip musicClip;
+
+        private void OnEnable()
+        {
+            musicClip = target as MusicClip;
+        }
+
         public override void OnInspectorGUI()
         {
             EditorGUI.BeginChangeCheck();
             EditorGUI.BeginDisabledGroup(EditorApplication.isPlaying);
             
-            EditorGUILayout.LabelField("Audio", EditorStyles.boldLabel);
-            DrawClipField();
-            DrawVolumeField();
-            DrawPitchField();
-            EditorGUILayout.Space();
-            
-            EditorGUILayout.LabelField("Type", EditorStyles.boldLabel);
-            DrawTypeField();
-            DrawStartEndFields();
+            DrawAudioSection();
+            DrawTypeSection();
             
             EditorGUI.EndDisabledGroup();
+            
+            DrawButtonSection();
+            
             if (!EditorGUI.EndChangeCheck()) return;
 
             serializedObject.ApplyModifiedProperties();
         }
 
+        private void DrawAudioSection()
+        {
+            EditorGUILayout.LabelField("Audio", EditorStyles.boldLabel);
+            DrawClipField();
+            DrawVolumeField();
+            DrawPitchField();
+            EditorGUILayout.Space();
+        }
+
         private void DrawClipField()
         {
             var clip = serializedObject.FindProperty("clip");
+            
+            EditorGUI.BeginDisabledGroup(true);
             EditorGUILayout.PropertyField(clip);
+            EditorGUI.EndDisabledGroup();
             
             if (clip.objectReferenceValue) return;
             
@@ -47,6 +62,14 @@ namespace Incantium.Audio.Editor
         {
             var pitch = serializedObject.FindProperty("pitch");
             EditorGUILayout.PropertyField(pitch);
+        }
+
+        private void DrawTypeSection()
+        {
+            EditorGUILayout.LabelField("Type", EditorStyles.boldLabel);
+            DrawTypeField();
+            DrawStartEndFields();
+            EditorGUILayout.Space();
         }
 
         private void DrawTypeField()
@@ -82,6 +105,19 @@ namespace Incantium.Audio.Editor
             EditorGUILayout.PropertyField(start, GUIContent.none);
             EditorGUILayout.PropertyField(end, GUIContent.none);
             EditorGUILayout.EndHorizontal();
+        }
+
+        private void DrawButtonSection()
+        {
+            if (!EditorApplication.isPlaying) return;
+            if (!GUILayout.Button(Styles.BUTTON) || !AudioPlayer.instance) return;
+            
+            AudioPlayer.instance.Play(musicClip, 2f);
+        }
+        
+        private static class Styles
+        {
+            public static readonly GUIContent BUTTON = new("Play", "Play the music clip.");
         }
     }
 }

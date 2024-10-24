@@ -3,19 +3,18 @@
     /// <summary>
     /// Types of fading mechanism from one audio clip to another.
     /// </summary>
-    /// <since>0.1.0</since>
+    /// <seealso href="https://github.com/Incantium/Audio-Player-Plus/blob/main/Documentation~/FadeType.md">FadeType
+    /// </seealso>
     public enum FadeType
     {
         /// <summary>
-        /// Complete waits for the last audio clip has faded out before fading in the new clip.
+        /// Waits until the last audio clip has faded out before fading in the new clip.
         /// </summary>
-        /// <since>0.1.0</since>
         Wait,
         
         /// <summary>
-        /// Directly fading in the new audio clip while fading out the previous clip.
+        /// Directly fading in the new audio clip while fading out the last clip.
         /// </summary>
-        /// <since>0.1.0</since>
         CrossFade
     }
 }

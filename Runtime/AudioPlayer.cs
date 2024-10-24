@@ -1,30 +1,32 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Incantium.Audio
 {
     /// <summary>
-    /// Class that handles the creation of different audio tracks that can fade audio between each other.
+    /// Class handling the creation of different audio tracks that can fade audio between each other.
     /// </summary>
+    /// <seealso href="https://github.com/Incantium/Audio-Player-Plus/blob/main/Documentation~/AudioPlayer.md">
+    /// AudioPlayer</seealso>
     [RequireComponent(typeof(AudioSource))]
-    public sealed class AudioPlayer : SingleBehaviour<AudioPlayer>
+    public class AudioPlayer : SingleBehaviour<AudioPlayer>
     {
         private const int TRACK_AMOUNT = 2;
+        
+        [SerializeField]
+        [Tooltip("Whether to play an audio clip at awake.")]
+        internal bool playOnAwake;
         
         [SerializeField] 
         [Tooltip("The audio clip currently in play.")]
         internal MusicClip music;
         
-        [SerializeField]
-        [Tooltip("True if the current audio clip should be played at wake-up.")]
-        internal bool playOnAwake;
-
         private readonly Queue<AudioTrack> tracks = new();
         private AudioSource sfx;
-        private Coroutine routine;
-
+        
         /// <summary>
         /// Method called when initializing the audio player. This method will create new <see cref="AudioTrack"/>s to
         /// play music on. At least two is required for a cross-fade effect.
@@ -52,7 +54,7 @@ namespace Incantium.Audio
             
             tracks.Enqueue(gameObject.AddComponent<AudioTrack>());
         }
-
+        
         /// <summary>
         /// Method called after initialization is complete. This method will start the first music clip if possible.
         /// </summary>
@@ -60,65 +62,30 @@ namespace Incantium.Audio
         {
             if (!playOnAwake || !music) return;
             
-            Play(0, FadeType.CrossFade);
-        }
-
-        /// <summary>
-        /// Method called when the game is pausing or resuming.
-        /// </summary>
-        /// <param name="paused">True if the game is pausing, otherwise false.</param>
-        private void OnApplicationPause(bool paused)
-        {
-            if (paused) Pause();
-            else Resume();
+            Play(music);
         }
         
         /// <summary>
-        /// Method to start playing the audio clip already set in the audio player.
+        /// Method to start playing a new audio clip as on its <see cref="MusicClip.type"/>.
         /// </summary>
-        /// <param name="fadeSeconds">The amount of seconds to fade in and out between audio clips. Setting this to 0
+        /// <param name="music">The audio clip to play.</param>
+        /// <param name="seconds">The amount of seconds to fade in and out between audio clips. Setting this to 0
         /// will mean instant transition.</param>
         /// <param name="type">How to fade the audio clip between each other.</param>
         /// <seealso cref="Stop"/>
-        public void Play(float fadeSeconds, FadeType type) => Play(music, fadeSeconds, type);
-        
-        /// <summary>
-        /// Method to start playing a new audio clip.
-        /// </summary>
-        /// <param name="music">The audio clip to play.</param>
-        /// <param name="fadeSeconds">The amount of seconds to fade in and out between audio clips. Setting this to 0
-        /// will mean instant transition.</param>
-        /// <param name="type">How to fade the audio clip between each other.</param>
-        /// <seealso cref="Stop"/>
-        public void Play(MusicClip music, float fadeSeconds, FadeType type)
+        public void Play([NotNull] MusicClip music, float seconds = 0f, FadeType type = FadeType.CrossFade)
         {
-            if (!music) throw new ArgumentException("Missing required audio music.");
-            if (this.music == music) return;
-
-            this.music = music;
-            
-            if (routine != null) StopCoroutine(routine);
-            routine = StartCoroutine(PlayRoutine(music, fadeSeconds, type));
+            if (!music) throw new ArgumentException("Missing music clip.");
+            if (music.type == MusicType.Once) sfx.PlayOneShot(music.clip, music.volume);
+            else PlayLoop(music, seconds, type);
         }
 
-        private IEnumerator PlayRoutine(MusicClip music, float fadeSeconds, FadeType type)
-        {
-            yield return LoadClip(music);
-            yield return Switch(fadeSeconds, type is FadeType.Wait);
-        }
-
-        /// <summary>
-        /// Method to play the audio clip as a sound effect once in the background.
-        /// </summary>
-        /// <param name="music">The audio clip to play.</param>
-        public void PlaySFX(MusicClip music) => sfx.PlayOneShot(music.clip, music.volume);
-        
         /// <summary>
         /// Method to stop the audio player.
         /// </summary>
-        /// <param name="fadeSeconds">The amount of seconds to fade out the audio player.</param>
-        /// <seealso cref="Play(float,Incantium.Audio.FadeType)"/>
-        public void Stop(float fadeSeconds = 0) => tracks.Peek().Stop(fadeSeconds);
+        /// <param name="seconds">The amount of seconds to fade out the audio player.</param>
+        /// <seealso cref="Play(MusicClip,float,FadeType)"/>
+        public void Stop(float seconds = 0) => tracks.Peek().Stop(seconds);
         
         /// <summary>
         /// Method to pause the audio player.
@@ -131,6 +98,36 @@ namespace Incantium.Audio
         /// </summary>
         /// <seealso cref="Pause"/>
         public void Resume() => tracks.Peek().Resume();
+
+        /// <summary>
+        /// Method to start playing a new audio clip in a <see cref="MusicType.Loop"/> or <see cref="MusicType.Smart"/>.
+        /// </summary>
+        /// <param name="music">The audio clip to play.</param>
+        /// <param name="seconds">The amount of seconds to fade in and out between audio clips. Setting this to 0
+        /// will mean instant transition.</param>
+        /// <param name="type">How to fade the audio clip between each other.</param>
+        /// <seealso cref="Stop"/>
+        private void PlayLoop(MusicClip music, float seconds = 0f, FadeType type = FadeType.CrossFade)
+        {
+            this.music = music;
+            
+            StopAllCoroutines();
+            StartCoroutine(PlayRoutine(music, seconds, type));
+        }
+        
+        /// <summary>
+        /// Method to, firstly, load in the requested music clip before gracefully switching between.
+        /// </summary>
+        /// <param name="music">The audio clip to play.</param>
+        /// <param name="seconds">The amount of seconds to fade in and out between audio clips. Setting this to 0
+        /// will mean instant transition.</param>
+        /// <param name="type">How to fade the audio clip between each other.</param>
+        /// <seealso cref="Stop"/>
+        private IEnumerator PlayRoutine(MusicClip music, float seconds, FadeType type)
+        {
+            yield return LoadClip(music);
+            yield return Switch(seconds, type is FadeType.Wait);
+        }
         
         /// <summary>
         /// Method to load in a music clip into local memory. This method will wait until this process has been
@@ -151,19 +148,19 @@ namespace Incantium.Audio
         /// new music clip. This method can also wait for the previous track to have stopped before starting the next
         /// music clip.
         /// </summary>
-        /// <param name="fadeSeconds">The amount of seconds to fade in and out the music clips.</param>
+        /// <param name="seconds">The amount of seconds to fade in and out the music clips.</param>
         /// <param name="wait">True if this method should wait before the previously has stopped completely, otherwise
         /// false.</param>
-        private IEnumerator Switch(float fadeSeconds, bool wait)
+        private IEnumerator Switch(float seconds, bool wait)
         {
             var previous = tracks.Dequeue();
-            previous.Stop(fadeSeconds);
+            previous.Stop(seconds);
             tracks.Enqueue(previous);
 
             if (wait) yield return new WaitUntil(() => previous.status is Status.Idle);
             
             var track = tracks.Peek();
-            track.Play(music, fadeSeconds);
+            track.Play(music, seconds);
         }
     }
 }

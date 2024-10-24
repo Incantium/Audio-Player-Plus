@@ -7,7 +7,7 @@ namespace Incantium.Audio
     /// <see cref="MonoBehaviour"/> a singleton. Multiple instances of this class is not allowed.
     /// </summary>
     /// <typeparam name="T">The singleton typing</typeparam>
-    /// <seealso href="https://github.com/Incantium/Incantium-Core/blob/main/Documentation~/SingleBehaviour.md">
+    /// <seealso href="https://github.com/Incantium/Audio-Player-Plus/blob/main/Documentation~/SingleBehaviour.md">
     /// SingleBehaviour</seealso>
     public abstract class SingleBehaviour<T> : MonoBehaviour where T : SingleBehaviour<T>
     {

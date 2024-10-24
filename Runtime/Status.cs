@@ -1,10 +1,8 @@
 ﻿namespace Incantium.Audio
 {
     /// <summary>
-    /// The internal status of the audio track.
+    /// The internal status of an <see cref="AudioTrack"/>.
     /// </summary>
-    /// <seealso cref="AudioTrack"/>
-    /// <since>0.1.0</since>
     internal enum Status
     {
         /// <summary>
@@ -18,7 +16,7 @@
         Starting,
         
         /// <summary>
-        /// The audio track is playing a audio clip at its desired volume.
+        /// The audio track is playing an audio clip at its desired volume.
         /// </summary>
         Playing,
         

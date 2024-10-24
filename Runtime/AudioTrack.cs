@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Incantium.Audio
@@ -7,7 +8,7 @@ namespace Incantium.Audio
     /// Class that handles the fading in and out of audio clips, alongside seamlessly looping audio clips with custom
     /// looping boundaries.
     /// </summary>
-    public sealed class AudioTrack : MonoBehaviour
+    internal sealed class AudioTrack : MonoBehaviour
     {
         private const int SOURCE_AMOUNT = 2;
         private const float DEFAULT_FADE = 0.055f;
@@ -54,7 +55,7 @@ namespace Incantium.Audio
         
         /// <summary>
         /// Method called each frame. This method will execute the starting, stopping and rescheduling code if this
-        /// <see cref="AudioTrack"/> is not not <see cref="Status.Idle"/>.
+        /// <see cref="AudioTrack"/> is not <see cref="Status.Idle"/>.
         /// </summary>
         private void Update()
         {
@@ -154,17 +155,12 @@ namespace Incantium.Audio
                 scheduler.loop = music.type is MusicType.Loop;
             }
             
-            if (music.type is MusicType.Once) PlayOnce();
-            else if (music.type is MusicType.Loop) PlayLoop();
+            if (music.type is MusicType.Once) throw new ArgumentException("Cannot loop music that is a sound effect.");
+            if (music.type is MusicType.Loop) PlayLoop();
             else PlaySmart(music);
 
             _status = Status.Starting;
         }
-
-        /// <summary>
-        /// Method to play a music clip once.
-        /// </summary>
-        private void PlayOnce() => sources.Peek().Play();
 
         /// <summary>
         /// Method to play a music clip on loop.

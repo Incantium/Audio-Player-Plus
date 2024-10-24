@@ -17,9 +17,7 @@ namespace Incantium.Audio.Editor
 
         public override void OnActivate(string searchContext, VisualElement rootElement)
         {
-            var scriptableObject = AudioPlayerSettings.GetOrCreateSettings();
-            
-            settings = new SerializedObject(scriptableObject);
+            settings = new SerializedObject(AudioPlayerSettings.instance);
         }
 
         public override void OnGUI(string searchContext)
@@ -32,8 +30,7 @@ namespace Incantium.Audio.Editor
 
             if (initialize)
             {
-                EditorGUILayout.PropertyField(settings.FindProperty("playAtAwake"));
-                EditorGUILayout.PropertyField(settings.FindProperty("startMusic"));
+                EditorGUILayout.PropertyField(settings.FindProperty("music"));
             }
             
             if (!EditorGUI.EndChangeCheck()) return;

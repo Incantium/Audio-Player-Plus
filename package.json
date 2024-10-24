@@ -1,6 +1,6 @@
 {
   "name": "com.incantium.audio",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "displayName": "Audio Player Plus",
   "description": "An audio player with better control over volume and looping.",
   "unity": "2022.3",
