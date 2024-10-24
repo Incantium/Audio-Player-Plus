@@ -3,7 +3,7 @@
 namespace Incantium.Audio.Editor
 {
     [CustomEditor(typeof(AudioTrack))]
-    public class ÀudioTrackDrawer : UnityEditor.Editor
+    public class AudioTrackDrawer : UnityEditor.Editor
     {
         public override void OnInspectorGUI()
         {

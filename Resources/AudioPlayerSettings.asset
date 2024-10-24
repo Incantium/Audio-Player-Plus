@@ -9,6 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d624ea4f955d4bdbb505028b9c54d207, type: 3}
-  m_Name: Audio Input
+  m_Script: {fileID: 11500000, guid: 8d884bb67aa044e2bba30c89e90d7820, type: 3}
+  m_Name: AudioPlayerSettings
   m_EditorClassIdentifier: 
+  instantiateAtStartup: 1
+  playAtAwake: 0
+  startMusic: {fileID: 0}
