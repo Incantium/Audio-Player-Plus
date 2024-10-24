@@ -12,6 +12,7 @@ namespace Incantium.Audio
     /// <seealso href="https://github.com/Incantium/Audio-Player-Plus/blob/main/Documentation~/AudioPlayer.md">
     /// AudioPlayer</seealso>
     [RequireComponent(typeof(AudioSource))]
+    [HelpURL("https://github.com/Incantium/Audio-Player-Plus/blob/main/Documentation~/AudioPlayer.md")]
     public class AudioPlayer : SingleBehaviour<AudioPlayer>
     {
         private const int TRACK_AMOUNT = 2;
