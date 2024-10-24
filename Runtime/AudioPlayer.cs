@@ -109,6 +109,8 @@ namespace Incantium.Audio
         /// <seealso cref="Stop"/>
         private void PlayLoop(MusicClip music, float seconds = 0f, FadeType type = FadeType.CrossFade)
         {
+            if (this.music == music) return;
+            
             this.music = music;
             
             StopAllCoroutines();
