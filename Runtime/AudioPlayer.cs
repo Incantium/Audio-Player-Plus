@@ -9,7 +9,7 @@ namespace Incantium.Audio
     /// Class that handles the creation of different audio tracks that can fade audio between each other.
     /// </summary>
     [RequireComponent(typeof(AudioSource))]
-    internal sealed class AudioPlayer : SingleBehaviour<AudioPlayer>
+    public sealed class AudioPlayer : SingleBehaviour<AudioPlayer>
     {
         private const int TRACK_AMOUNT = 2;
         
