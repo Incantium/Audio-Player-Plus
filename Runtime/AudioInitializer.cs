@@ -20,10 +20,9 @@ namespace Incantium.Audio
             if (!settings || !settings.instantiateAtStartup) return;
 
             var audio = new GameObject("Audio");
-            var player = audio.AddComponent<AudioPlayer>();
+            audio.AddComponent<AudioPlayer>();
             
-            player.playOnAwake = settings.music;
-            player.music = settings.music;
+            if (settings.music) settings.music.Play();
             
             Object.DontDestroyOnLoad(audio);
         }

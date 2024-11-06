@@ -109,8 +109,8 @@ namespace Incantium.Audio.Editor
 
         private void DrawButtonSection()
         {
-            if (!EditorApplication.isPlaying) return;
-            if (!GUILayout.Button(Styles.BUTTON) || !AudioPlayer.instance) return;
+            if (!EditorApplication.isPlaying  || !AudioPlayer.instance) return;
+            if (!GUILayout.Button(Styles.BUTTON)) return;
             
             AudioPlayer.instance.Play(musicClip, 2f);
         }

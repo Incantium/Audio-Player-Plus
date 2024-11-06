@@ -1,8 +1,8 @@
 {
   "name": "com.incantium.audio",
-  "version": "1.0.1",
+  "version": "1.1.1",
   "displayName": "Audio Player Plus",
-  "description": "An audio player with better control over volume and looping.",
+  "description": "A background and sound effect audio player with better control over volume and looping.",
   "unity": "2022.3",
   "documentationUrl": "https://github.com/Incantium/Audio-Player-Plus/blob/main/README.md",
   "licensesUrl": "https://github.com/Incantium/Audio-Player-Plus/blob/main/LICENSE",
