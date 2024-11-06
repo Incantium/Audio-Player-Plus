@@ -15,7 +15,7 @@ their volume.
 
 Firstly, it is important to create a new [music clip](Documentation~/MusicClip.md) instance for each audio clip in you 
 game. Audio Player Plus requires you to use this new data structure for more control over the audio settings per clip. 
-This process is done by right-clicking on an audio clip in Unity and then selecting "Create -> Audio -> Music Clip".
+This process is done by right-clicking on an audio clip in Unity and then selecting "Create -> Data -> Music Clip".
 
 Furthermore, it is possible to make the [music clip](Documentation~/MusicClip.md) much better with its new settings,
 which can be read [here](Documentation~/MusicClip.md).
@@ -47,7 +47,7 @@ public class ExampleClass : MonoBehaviour
 
     private void Start()
     {
-        AudioPlayer.instance.Play(music, 2f, FadeType.CrossFade);
+        music.Play(2f, FadeType.CrossFade);
     }
 }
 ```
