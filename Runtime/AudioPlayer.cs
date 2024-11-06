@@ -76,7 +76,7 @@ namespace Incantium.Audio
         /// <seealso cref="Stop"/>
         public void Play([NotNull] MusicClip music, float seconds = 0f, FadeType type = FadeType.CrossFade)
         {
-            if (!music) throw new ArgumentException("Missing music clip.");
+            if (!music || !music.clip) throw new ArgumentException("Missing audio clip.");
             if (music.type == MusicType.Once) sfx.PlayOneShot(music.clip, music.volume);
             else PlayLoop(music, seconds, type);
         }
