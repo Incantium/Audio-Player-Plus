@@ -17,6 +17,18 @@ namespace Incantium.Audio
         public AudioClip clip;
         
         /// <summary>
+        /// The type of audio clip. The following types are available:
+        /// <ul>
+        ///     <li><see cref="MusicType.Smart"/>: <inheritdoc cref="MusicType.Smart"/></li>
+        ///     <li><see cref="MusicType.Loop"/>: <inheritdoc cref="MusicType.Loop"/></li>
+        ///     <li><see cref="MusicType.Once"/>: <inheritdoc cref="MusicType.Once"/></li>
+        /// </ul>
+        /// </summary>
+        [SerializeField]
+        [Tooltip("The type of audio clip.")]
+        public MusicType type = MusicType.Loop;
+        
+        /// <summary>
         /// The maximum volume of the audio clip after fading in. 
         /// </summary>
         [SerializeField]
@@ -32,18 +44,6 @@ namespace Incantium.Audio
         [Tooltip("The pitch or speed of the audio clip.")]
         [Range(-3, 3)]
         public float pitch = 1;
-        
-        /// <summary>
-        /// The type of audio clip. The following types are available:
-        /// <ul>
-        ///     <li><see cref="MusicType.Smart"/>: <inheritdoc cref="MusicType.Smart"/></li>
-        ///     <li><see cref="MusicType.Loop"/>: <inheritdoc cref="MusicType.Loop"/></li>
-        ///     <li><see cref="MusicType.Once"/>: <inheritdoc cref="MusicType.Once"/></li>
-        /// </ul>
-        /// </summary>
-        [SerializeField]
-        [Tooltip("The type of audio clip.")]
-        public MusicType type = MusicType.Loop;
         
         /// <summary>
         /// The start boundary of the main loop in seconds.
@@ -96,5 +96,14 @@ namespace Incantium.Audio
         /// <remarks>This value takes into account the scaling of the pitch, which shortens the original
         /// <see cref="AudioClip.length"/>.</remarks>
         internal float outro => (clip.length - end) / pitch;
+
+        /// <summary>
+        /// Method to start playing a new audio clip as on its <see cref="MusicClip.type"/>.
+        /// </summary>
+        /// <param name="seconds">The amount of seconds to fade in and out between audio clips. Setting this to 0
+        /// will mean instant transition.</param>
+        /// <param name="type">How to fade the audio clip between each other.</param>
+        public void Play(float seconds = 0f, FadeType type = FadeType.CrossFade) 
+            => AudioPlayer.instance.Play(this, seconds, type);
     }
 }
