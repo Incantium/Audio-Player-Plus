@@ -1,4 +1,4 @@
-﻿using System.IO;
+﻿using System;
 using UnityEditor;
 using UnityEngine;
 
@@ -6,29 +6,24 @@ namespace Incantium.Audio.Editor
 {
     public static class MusicClipCreator
     {
-        [MenuItem("Assets/Create/Audio/Music Clip", true)]
+        [MenuItem("Assets/Create/Data/Music Clip", true)]
         private static bool ValidateCreateMusicClip()
         {
             return Selection.objects.Length == 1 && Selection.activeObject is AudioClip;
         }
         
-        [MenuItem("Assets/Create/Audio/Music Clip")]
+        [MenuItem("Assets/Create/Data/Music Clip")]
         private static void CreateMusicClip()
         {
             if (Selection.activeObject is not AudioClip selectedClip) return;
             
-            var selectedPath = AssetDatabase.GetAssetPath(selectedClip);
-            var directory = Path.GetDirectoryName(selectedPath);
-            var name = Path.GetFileNameWithoutExtension(selectedPath);
-            
             var musicClip = ScriptableObject.CreateInstance<MusicClip>();
             musicClip.clip = selectedClip;
-
-            if (directory == null) return;            
             
-            var musicClipPath = Path.Combine(directory, name + ".asset");
+            var fullPath = EditorUtility.SaveFilePanel("Create Music Clip", "", "", "asset");
+            var path = fullPath[fullPath.IndexOf("Assets", StringComparison.Ordinal)..];
             
-            AssetDatabase.CreateAsset(musicClip, musicClipPath);
+            AssetDatabase.CreateAsset(musicClip, path);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             
