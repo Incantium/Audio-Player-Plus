@@ -20,7 +20,7 @@ namespace Incantium.Audio.Editor
             var musicClip = ScriptableObject.CreateInstance<MusicClip>();
             musicClip.clip = selectedClip;
             
-            var fullPath = EditorUtility.SaveFilePanel("Create Music Clip", "", "", "asset");
+            var fullPath = EditorUtility.SaveFilePanelInProject("Create Music Clip", "", "asset", "");
             var path = fullPath[fullPath.IndexOf("Assets", StringComparison.Ordinal)..];
             
             AssetDatabase.CreateAsset(musicClip, path);
